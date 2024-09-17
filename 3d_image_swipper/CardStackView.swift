@@ -20,9 +20,20 @@ struct Item: Identifiable {
 struct CardStackView: View {
     @State private var selectedIndex = 0
     @Binding private var selectedCardIndex: Int
-    @State private var item: [Item]
+    @State private var items: [Item]
     let imageSize: CGSize
     let maximumOffset: CGFloat
+    
+    init(images: [ImageResource], selectedCardIndex: Binding<Int>? = nil , imageSize: CGSize = CGSize(width: 100, height: 100)) {
+       var createdItems = [Item]()
+        for (id, image) in images.enumerated() {
+            createdItems.append(Item(id: id, image: image, zIndex: Double(images.count - 1 - id ))
+                                )}
+            self._selectedCardIndex = selectedCardIndex ?? .constant(0)
+            self.items = createdItems
+        self.imageSize = imageSize
+        self.maximumOffset = imageSize.width * 0.75
+    }
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
