@@ -40,6 +40,7 @@ struct CardStackView: View {
 //                                    (-15 * (1 - (abs(items[selectedIndex].offSset / maximumOffset ))))
 //                                 
 //                                ) )
+    
     var body: some View {
         ZStack(content: {
             ForEach(items) { item in
@@ -51,10 +52,12 @@ struct CardStackView: View {
                 ).rotationEffect(.degrees(item.id == selectedIndex ? (item.offSset / maximumOffset * 10.0 ) :
                                             item.id % 2 == 0 ? (15 * (1 - (  abs(items[selectedIndex].offSset / maximumOffset)))) :
                                             (-15 * (1-(abs(items[selectedIndex].offSset / maximumOffset)))))
-                                 ,anchor:item.id % 2 == 0 ? .bottomLeading  : .bottomTrailing).scaleEffect(
-                                    item.id == selectedIndex ? CGSize(width: 1 - (abs(item.offset / maximumOffset) * 0.5 ), height: 1 - (abs(
-                                        items[selectedIndex].offSset / maximumOffset)) ) : CGSize(width: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)), height: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)))
-                                 )
+                                 ,anchor:item.id % 2 == 0 ? .bottomLeading  : .bottomTrailing)
+                .scaleEffect(
+                    item.id == selectedIndex ? CGSize(width: 1 - (abs(item.offset / maximumOffset) * 0.5 ), height: 1 - (abs(
+                        item.offSset / maximumOffset)))  :  CGSize(width: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)), height: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)))
+
+                ).offset(x: item.offset / 4).containerShape(Rectangle() )
                         .gesture(
                             item.id != selectedIndex ? nil : DragGesture().onChanged({ value in
                                 withAnimation (.linear(duration: 0.1)) {
