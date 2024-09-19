@@ -12,13 +12,19 @@ struct ContentView: View {
     let images: [ImageResource] = [.img1, .img2, .img3, .img4, .img5]
     let colors: [Color] = [.orange, .red , .blue , .cyan , .red , Color(.label) , .blue]
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+       
+        ZStack {
+            Color(colors[4]).opacity(0.85).ignoresSafeArea()
+            VStack {
+                Spacer()
+                Text("Explore the anime world now ").multilineTextAlignment(.center).font(.largeTitle).bold().padding(.horizontal)
+                Spacer()
+                CardStackView(images: images,selectedCardIndex: $selectedIndex, imageSize:  CGSize(width: 340, height: 500))
+                Spacer()
+            }.padding()
         }
-        .padding()
+       
+       
     }
 }
 

@@ -15,6 +15,9 @@ struct Item: Identifiable {
     
     
 }
+//item.id == selectedIndex ? ( item.offSset / maximumOffset * 10.0) :
+//item.id % 2 == 0 ? ( 15 * (1 - abs( items[selectedIndex].offSset / maximumOffset))) :
+//(-15 * ( 1 - abs(items[selectedIndex].offSset / maximumOffset )) ))
 
 
 struct CardStackView: View {
@@ -34,30 +37,25 @@ struct CardStackView: View {
         self.imageSize = imageSize
         self.maximumOffset = imageSize.width * 0.75
     }
-//        .offset(x: item.offSset)
-//        .rotationEffect(.degrees(item.id == selectedIndex ? (item.offSset / maximumOffset * 10.0 ) :
-//                                    item.id % 2 ? (15 * ( 1 - (abs(items[selectedIndex].offSset / maximumOffset )))) :
-//                                    (-15 * (1 - (abs(items[selectedIndex].offSset / maximumOffset ))))
-//                                 
-//                                ) )
-    
     var body: some View {
         ZStack(content: {
             ForEach(items) { item in
-                Image(item.image).resizable().scaledToFill().frame(width: imageSize.width,height: imageSize.height,alignment: .center).clipShape(.rect(cornerRadius: imageSize.height * 0.05)).overlay {
+                Image(item.image).resizable().scaledToFill()
+                    .frame(width: imageSize.width,height: imageSize.height,alignment: .center)
+                    .clipShape(.rect(cornerRadius: imageSize.height * 0.05))
+                    .overlay {
                     RoundedRectangle(cornerRadius: imageSize.height * 0.05).stroke(.white.opacity(0.20) ,lineWidth: 4).padding(-1.5)
-                }.offset(x: item.offSset).rotation3DEffect(
+                    }.offset(x: item.offSset)
+                    .zIndex(item.zIndex)
+                    .rotation3DEffect(
                     .degrees(item.offSset/maximumOffset * -25.0),
                                           axis: (x: 0.0, y: 1.0, z: 0.0)
-                ).rotationEffect(.degrees(item.id == selectedIndex ? (item.offSset / maximumOffset * 10.0 ) :
-                                            item.id % 2 == 0 ? (15 * (1 - (  abs(items[selectedIndex].offSset / maximumOffset)))) :
-                                            (-15 * (1-(abs(items[selectedIndex].offSset / maximumOffset)))))
-                                 ,anchor:item.id % 2 == 0 ? .bottomLeading  : .bottomTrailing)
+                    ).rotationEffect(.degrees(item.id == selectedIndex ? ( item.offSset / maximumOffset * 10.0)  : -2   ), anchor: item.id % 2 == 0 ? .bottomLeading  : .bottomTrailing)
                 .scaleEffect(
-                    item.id == selectedIndex ? CGSize(width: 1 - (abs(item.offset / maximumOffset) * 0.5 ), height: 1 - (abs(
-                        item.offSset / maximumOffset)))  :  CGSize(width: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)), height: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)))
+                    item.id == selectedIndex ?   CGSize(width: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)), height: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset))):
+                    CGSize(width: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)), height: 0.8 + (0.2 * abs(items[selectedIndex].offSset / maximumOffset)))
 
-                ).offset(x: item.offset / 4).containerShape(Rectangle() )
+                ).offset(x: item.offSset / 4).containerShape(Rectangle())
                         .gesture(
                             item.id != selectedIndex ? nil : DragGesture().onChanged({ value in
                                 withAnimation (.linear(duration: 0.1)) {
